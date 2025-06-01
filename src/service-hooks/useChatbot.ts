@@ -47,7 +47,7 @@ export function useChatbotSSE() {
                 }
                 done = doneReading
             }
-        } catch (err: { message: string }) {
+        } catch (err: any) { // @typescript-eslint/no-explicit-any
             setError(err.message)
         } finally {
             setLoading(false)
