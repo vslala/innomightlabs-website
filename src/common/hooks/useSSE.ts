@@ -1,38 +1,34 @@
-import { useState } from "react";
+import { useState } from 'react';
 
-export function useLLMStream<T>(
-  url: string,
-  payload: T,
-  headers?: Record<string, string>
-) {
-  const [data, setData] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
+export function useLLMStream<T>(url: string, payload: T, headers?: Record<string, string>) {
+    const [data, setData] = useState<string>('');
+    const [loading, setLoading] = useState<boolean>(false);
 
-  async function fetchStream() {
-    setLoading(true);
-    setData("");
-    
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        ...(headers || {}),
-      },
-      body: JSON.stringify(payload),
-    });
+    async function fetchStream() {
+        setLoading(true);
+        setData('');
 
-    const reader = response.body?.getReader();
-    const decoder = new TextDecoder();
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                ...(headers || {}),
+            },
+            body: JSON.stringify(payload),
+        });
 
-    if (!reader) return;
+        const reader = response.body?.getReader();
+        const decoder = new TextDecoder();
 
-    while (true) {
-      const { value, done } = await reader.read();
-      if (done) break;
-      setData((prev) => prev + decoder.decode(value, { stream: true }));
+        if (!reader) return;
+
+        while (true) {
+            const { value, done } = await reader.read();
+            if (done) break;
+            setData((prev) => prev + decoder.decode(value, { stream: true }));
+        }
+        setLoading(false);
     }
-    setLoading(false);
-  }
 
-  return { data, loading, fetchStream };
+    return { data, loading, fetchStream };
 }

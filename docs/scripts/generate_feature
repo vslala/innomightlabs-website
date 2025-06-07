@@ -1,0 +1,43 @@
+#!/usr/bin/env python3
+import os
+import sys
+import subprocess
+
+# DDD layers and sub-folders
+TEMPLATE = {
+    "domain":        ["entities", "valueObjects", "services", "repositories"],
+    "application":   ["useCases", "dto"],
+    "infrastructure":["api", "services"],
+    "presentation":  ["pages", "components", "hooks"]
+}
+
+def get_git_root() -> str:
+    """Returns the absolute path to the git repository root, or exits if not in a git repo."""
+    try:
+        root = subprocess.check_output(
+            ["git", "rev-parse", "--show-toplevel"],
+            stderr=subprocess.DEVNULL,
+            universal_newlines=True
+        ).strip()
+        return root
+    except subprocess.CalledProcessError:
+        sys.exit("Error: must be inside a git repository.")
+
+def make_feature(root: str, name: str):
+    """Creates the full DDD folder scaffold for a given feature under src/features."""
+    base = os.path.join(root, "src", "features", name)
+    for layer, subs in TEMPLATE.items():
+        for sub in subs:
+            path = os.path.join(base, layer, sub)
+            os.makedirs(path, exist_ok=True)
+    print(f"✅ Scaffolded feature '{name}' at {base}")
+
+def main():
+    if len(sys.argv) < 2:
+        sys.exit("Usage: generate_feature.py <feature1> [<feature2> …]")
+    repo_root = get_git_root()
+    for feat in sys.argv[1:]:
+        make_feature(repo_root, feat)
+
+if __name__ == "__main__":
+    main()
