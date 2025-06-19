@@ -2,6 +2,7 @@ import { Paper, ScrollArea, Stack, Title } from '@mantine/core';
 
 interface SideNavProps {
     title: string;
+    children?: React.ReactNode;
 }
 
 const SideNav: React.FC<SideNavProps> = (props) => {
@@ -18,12 +19,11 @@ const SideNav: React.FC<SideNavProps> = (props) => {
                 padding: 0,
             }}
         >
+            <Title order={3} p="md" style={{ borderBottom: '1px solid #e0e0e0' }}>
+                {props.title}
+            </Title>
             <ScrollArea style={{ flex: 1 }}>
-                <Stack p="md">
-                    <Title order={3} p="md" style={{ borderBottom: '1px solid #e0e0e0' }}>
-                        {props.title}
-                    </Title>
-                </Stack>
+                <Stack p="md">{props.children}</Stack>
             </ScrollArea>
         </Paper>
     );
