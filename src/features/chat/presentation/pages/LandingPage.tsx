@@ -8,19 +8,19 @@ import InputArea from '../components/inputarea/index.tsx';
 import SideNav from '../components/sidenav/index.tsx';
 
 const LandingPage: React.FC = () => {
-    const { askChatbot, loading, thoughts, finalResponse } = useChatbotSSE();
+    const { askChatbot, loading, thoughtSteps, finalResponse } = useChatbotSSE();
     const { messages, addUserMessage, addAssistantMessage } = useConversation();
     const savedResponse = useRef(false);
 
     useEffect(() => {
         if (!loading && finalResponse && !savedResponse.current) {
-            addAssistantMessage(finalResponse, thoughts);
+            addAssistantMessage(finalResponse, '', thoughtSteps);
             savedResponse.current = true;
         }
         if (loading) {
             savedResponse.current = false;
         }
-    }, [loading, finalResponse, thoughts, addAssistantMessage]);
+    }, [loading, finalResponse, thoughtSteps, addAssistantMessage]);
 
     const handleFormSubmit = (values: FormValues) => {
         addUserMessage(values.userQuery);
@@ -63,14 +63,14 @@ const LandingPage: React.FC = () => {
                 >
                     {messages.map((message) =>
                         message.role === 'assistant' ? (
-                            <DisplayResponse key={message.id} thinkingResponse={message.thoughts || ''} finalResponse={message.content} />
+                            <DisplayResponse key={message.id} thoughtSteps={message.thoughtSteps || []} finalResponse={message.content} />
                         ) : (
                             <Box key={message.id} style={{ marginBottom: '16px', padding: '12px', background: '#e3f2fd', borderRadius: '8px' }}>
                                 {message.content}
                             </Box>
                         ),
                     )}
-                    {loading && (thoughts || finalResponse) && <DisplayResponse thinkingResponse={thoughts} finalResponse={finalResponse} />}
+                    {loading && (thoughtSteps.length > 0 || finalResponse) && <DisplayResponse thoughtSteps={thoughtSteps} finalResponse={finalResponse} />}
                 </Box>
 
                 {/* ------ Input area (fixed at bottom) ------ */}

@@ -5,19 +5,26 @@ import Markdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import styles from './DisplayResponse.module.css';
+import ThoughtTimeline from './ThoughtTimeline';
+
+interface ThoughtStep {
+    step: string;
+    step_title?: string;
+    content: string;
+}
 
 interface DisplayResponseProps {
-    thinkingResponse: string;
+    thoughtSteps: ThoughtStep[];
     finalResponse: string;
 }
 
-const DisplayResponse: React.FC<DisplayResponseProps> = ({ thinkingResponse, finalResponse }) => {
+const DisplayResponse: React.FC<DisplayResponseProps> = ({ thoughtSteps, finalResponse }) => {
     const [showThinking, setShowThinking] = useState(false);
 
     return (
         <Box className={styles.messageContainer}>
             <Box className={styles.assistantMessage}>
-                {thinkingResponse && (
+                {thoughtSteps.length > 0 && (
                     <Box className={styles.thinkingSection}>
                         <Group className={styles.thinkingHeader} onClick={() => setShowThinking(!showThinking)}>
                             <IconBrain size={16} className={styles.thinkingIcon} />
@@ -27,7 +34,7 @@ const DisplayResponse: React.FC<DisplayResponseProps> = ({ thinkingResponse, fin
                             </ActionIcon>
                         </Group>
                         <Collapse in={showThinking}>
-                            <Box className={styles.thinkingContent}>{thinkingResponse}</Box>
+                            <ThoughtTimeline steps={thoughtSteps} />
                         </Collapse>
                     </Box>
                 )}

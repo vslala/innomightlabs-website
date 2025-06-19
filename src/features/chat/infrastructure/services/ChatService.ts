@@ -29,31 +29,74 @@ class ChatServiceLocal implements ChatService {
     async sendMessage(message: MessageRequest): Promise<Response> {
         const content = message.content.toLowerCase();
 
-        let thoughtContent = 'Analyzing your request...';
+        let steps: Array<{ step: string; step_title?: string; content: string }> = [];
         let responseContent = 'This is a mock response for local development.';
 
-        if (content.includes('code')) {
-            thoughtContent = 'Looking for a good Python example...';
+        if (content.includes('multi-step')) {
+            steps = [
+                {
+                    step: 'analysis',
+                    step_title: 'Analyzing the Problem',
+                    content: "Breaking down the user's request to understand the core requirements and constraints.",
+                },
+                {
+                    step: 'planning',
+                    step_title: 'Creating a Strategy',
+                    content: 'Developing a structured approach to address each component of the problem systematically.',
+                },
+                {
+                    step: 'reasoning',
+                    step_title: 'Logical Processing',
+                    content: 'Applying logical reasoning to evaluate different solutions and their potential outcomes.',
+                },
+                { step: 'synthesis', step_title: 'Combining Ideas', content: 'Integrating various concepts and approaches to form a comprehensive solution.' },
+                {
+                    step: 'evaluation',
+                    step_title: 'Quality Assessment',
+                    content: 'Reviewing the proposed solution for accuracy, completeness, and effectiveness.',
+                },
+            ];
+            responseContent =
+                "Based on my multi-step analysis, here's a comprehensive response that addresses your request through systematic thinking and evaluation.";
+        } else if (content.includes('code')) {
+            steps = [{ step: 'analysis', content: 'Looking for a good Python example...' }];
             responseContent =
                 "Here's a simple Python function:\n\n```python\ndef fibonacci(n):\n    if n <= 1:\n        return n\n    return fibonacci(n-1) + fibonacci(n-2)\n\n# Example usage\nprint(fibonacci(10))  # Output: 55\n```";
         } else if (content.includes('joke')) {
-            thoughtContent = 'Searching my joke database...';
+            steps = [{ step: 'analysis', content: 'Searching my joke database...' }];
             responseContent =
                 'Here\'s a programming joke for you:\n\n**Why do programmers prefer dark mode?**\n\n*Because light attracts bugs!* 🐛\n\n---\n\n**Bonus joke:**\n\nA SQL query goes into a bar, walks up to two tables and asks:\n\n*"Can I join you?"* 😄';
+        } else {
+            steps = [{ step: 'analysis', content: 'Analyzing your request...' }];
         }
 
         const mockResponse = new Response(
             new ReadableStream({
                 start(controller) {
                     const encoder = new TextEncoder();
+                    let stepIndex = 0;
 
-                    controller.enqueue(encoder.encode(`data: ${JSON.stringify({ step: 'thought', content: thoughtContent })}\n\n`));
+                    const sendNextStep = () => {
+                        if (stepIndex < steps.length) {
+                            controller.enqueue(
+                                encoder.encode(
+                                    `data: ${JSON.stringify({
+                                        step: steps[stepIndex].step,
+                                        step_title: steps[stepIndex].step_title,
+                                        content: steps[stepIndex].content,
+                                    })}\n\n`,
+                                ),
+                            );
+                            stepIndex++;
+                            setTimeout(sendNextStep, 800);
+                        } else {
+                            controller.enqueue(encoder.encode(`data: ${JSON.stringify({ step: 'final_response', content: responseContent })}\n\n`));
+                            controller.enqueue(encoder.encode('data: [DONE]\n\n'));
+                            controller.close();
+                        }
+                    };
 
-                    setTimeout(() => {
-                        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ step: 'final_response', content: responseContent })}\n\n`));
-                        controller.enqueue(encoder.encode('data: [DONE]\n\n'));
-                        controller.close();
-                    }, 1000);
+                    sendNextStep();
                 },
             }),
             {

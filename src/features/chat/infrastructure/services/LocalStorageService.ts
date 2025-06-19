@@ -1,7 +1,14 @@
+interface ThoughtStep {
+    step: string;
+    step_title?: string;
+    content: string;
+}
+
 interface ChatMessage {
     id: string;
     content: string;
     thoughts?: string;
+    thoughtSteps?: ThoughtStep[];
     timestamp: Date;
     role: 'user' | 'assistant';
 }
