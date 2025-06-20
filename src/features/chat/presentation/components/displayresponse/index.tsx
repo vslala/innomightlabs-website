@@ -42,10 +42,10 @@ const DisplayResponse: React.FC<DisplayResponseProps> = ({ thoughtSteps, finalRe
                 <Box className={styles.responseContent}>
                     <Markdown
                         components={{
-                            code({ inline, className, children, ...props }) {
+                            code({ className, children, ...props }) {
                                 const match = /language-(\w+)/.exec(className || '');
-                                return !inline && match ? (
-                                    <SyntaxHighlighter style={oneDark} language={match[1]} PreTag="div" {...props}>
+                                return match ? (
+                                    <SyntaxHighlighter style={oneDark as any} language={match[1]} PreTag="div">
                                         {String(children).replace(/\n$/, '')}
                                     </SyntaxHighlighter>
                                 ) : (

@@ -1,7 +1,7 @@
 import { createParser, type EventSourceMessage, type ParseError } from 'eventsource-parser';
 import { useCallback, useMemo, useState } from 'react';
 import type { MessageRequest } from '../features/chat/application/dto/chatModels';
-import { getChatService } from '../features/chat/infrastructure/services/chatService';
+import { getChatService } from '../features/chat/infrastructure/services/ChatService';
 
 interface ThoughtStep {
     step: string;

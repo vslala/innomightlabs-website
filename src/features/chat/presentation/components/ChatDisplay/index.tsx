@@ -36,7 +36,7 @@ const ChatDisplay: React.FC = () => {
     // Merge backend messages with local messages, prioritizing local thoughtSteps
     const mergedMessages = backendMessages.map((backendMsg) => {
         const localMsg = localMessages.find((local) => local.id === backendMsg.id);
-        return localMsg ? { ...backendMsg, thoughtSteps: localMsg.thoughtSteps } : backendMsg;
+        return localMsg ? { ...backendMsg, thoughtSteps: localMsg.thoughtSteps } : { ...backendMsg, thoughtSteps: [] };
     });
 
     // Add any local-only messages
