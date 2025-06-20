@@ -1,4 +1,5 @@
 import { Paper, ScrollArea, Stack, Title, Text, Box } from '@mantine/core';
+import { useNavigate } from 'react-router-dom';
 import type { Conversation } from '../../../application/dto/chatModels';
 
 interface SideNavProps {
@@ -8,8 +9,14 @@ interface SideNavProps {
 }
 
 const SideNav: React.FC<SideNavProps> = ({ title, conversations, children }) => {
+    const navigate = useNavigate();
+
     const truncateTitle = (title: string, maxLength: number = 30) => {
         return title.length > maxLength ? title.substring(0, maxLength) + '...' : title;
+    };
+
+    const handleConversationClick = (conversationId: string) => {
+        navigate(`/chat/${conversationId}`);
     };
 
     return (
@@ -42,6 +49,7 @@ const SideNav: React.FC<SideNavProps> = ({ title, conversations, children }) => 
                                     backgroundColor: '#f8f9fa',
                                 },
                             }}
+                            onClick={() => handleConversationClick(conversation.id)}
                             onMouseEnter={(e) => {
                                 e.currentTarget.style.backgroundColor = '#f8f9fa';
                             }}

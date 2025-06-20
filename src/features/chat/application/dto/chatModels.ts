@@ -17,3 +17,12 @@ export interface Conversation {
     created_at: Date;
     updated_at: Date;
 }
+
+export type Role = 'user' | 'assistant';
+
+export interface Message {
+    id: string;
+    content: string;
+    role: Role;
+    timestamp: Date;
+}
