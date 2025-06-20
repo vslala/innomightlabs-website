@@ -2,6 +2,7 @@ import { Box, Container, Flex } from '@mantine/core';
 import React, { useEffect, useRef } from 'react';
 import { useChatbotSSE } from '../../../../service-hooks/useChatbot.ts';
 import { useConversation } from '../../../../service-hooks/useConversation.ts';
+import { useConversations } from '../../../../service-hooks/useConversations.ts';
 import DisplayResponse from '../components/displayresponse/index.tsx';
 import type { FormValues } from '../components/inputarea/index.tsx';
 import InputArea from '../components/inputarea/index.tsx';
@@ -10,6 +11,7 @@ import SideNav from '../components/sidenav/index.tsx';
 const LandingPage: React.FC = () => {
     const { askChatbot, loading, thoughtSteps, finalResponse } = useChatbotSSE();
     const { messages, addUserMessage, addAssistantMessage } = useConversation();
+    const { conversations } = useConversations();
     const savedResponse = useRef(false);
 
     useEffect(() => {
@@ -41,7 +43,7 @@ const LandingPage: React.FC = () => {
             }}
         >
             {/* Side navigation (fixed width) */}
-            <SideNav title="Conversations"></SideNav>
+            <SideNav title="Conversations" conversations={conversations}></SideNav>
 
             {/* Main chat area: flex column, fills all leftover space */}
             <Flex

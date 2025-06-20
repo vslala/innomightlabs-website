@@ -38,14 +38,26 @@ export function useChatbotSSE() {
                         if (chunk.step === 'final_response') {
                             setFinalResponse((prev) => prev + chunk.content);
                         } else if (chunk.step !== 'final_response') {
-                            setThoughtSteps((prev) => [
-                                ...prev,
-                                {
-                                    step: chunk.step,
-                                    step_title: chunk.step_title,
-                                    content: chunk.content,
-                                },
-                            ]);
+                            setThoughtSteps((prev) => {
+                                const existingStepIndex = prev.findIndex((s) => s.step === chunk.step);
+                                if (existingStepIndex >= 0) {
+                                    const updated = [...prev];
+                                    updated[existingStepIndex] = {
+                                        ...updated[existingStepIndex],
+                                        content: updated[existingStepIndex].content + chunk.content,
+                                    };
+                                    return updated;
+                                } else {
+                                    return [
+                                        ...prev,
+                                        {
+                                            step: chunk.step,
+                                            step_title: chunk.step_title,
+                                            content: chunk.content,
+                                        },
+                                    ];
+                                }
+                            });
                         }
                     },
                     onError(err: ParseError) {

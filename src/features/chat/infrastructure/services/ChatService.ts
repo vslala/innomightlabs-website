@@ -56,16 +56,43 @@ class ChatServiceLocal implements ChatService {
                     content: 'Reviewing the proposed solution for accuracy, completeness, and effectiveness.',
                 },
             ];
-            responseContent =
-                "Based on my multi-step analysis, here's a comprehensive response that addresses your request through systematic thinking and evaluation.";
+            responseContent = `Based on my multi-step analysis, here's a comprehensive response that addresses your request through systematic thinking and evaluation.
+
+## Key Findings
+
+- **Systematic Approach**: Used structured thinking methodology
+- **Comprehensive Analysis**: Evaluated multiple perspectives
+- **Quality Assurance**: Reviewed for accuracy and completeness
+
+This demonstrates the power of **multi-step reasoning** in problem-solving!`;
         } else if (content.includes('code')) {
             steps = [{ step: 'analysis', content: 'Looking for a good Python example...' }];
-            responseContent =
-                "Here's a simple Python function:\n\n```python\ndef fibonacci(n):\n    if n <= 1:\n        return n\n    return fibonacci(n-1) + fibonacci(n-2)\n\n# Example usage\nprint(fibonacci(10))  # Output: 55\n```";
+            responseContent = `Here's a simple Python function:
+
+\`\`\`python
+def fibonacci(n):
+    if n <= 1:
+        return n
+    return fibonacci(n-1) + fibonacci(n-2)
+
+# Example usage
+print(fibonacci(10))  # Output: 55
+\`\`\``;
         } else if (content.includes('joke')) {
             steps = [{ step: 'analysis', content: 'Searching my joke database...' }];
-            responseContent =
-                'Here\'s a programming joke for you:\n\n**Why do programmers prefer dark mode?**\n\n*Because light attracts bugs!* 🐛\n\n---\n\n**Bonus joke:**\n\nA SQL query goes into a bar, walks up to two tables and asks:\n\n*"Can I join you?"* 😄';
+            responseContent = `Here's a programming joke for you:
+
+**Why do programmers prefer dark mode?**
+
+*Because light attracts bugs!* 🐛
+
+---
+
+**Bonus joke:**
+
+A SQL query goes into a bar, walks up to two tables and asks:
+
+*"Can I join you?"* 😄`;
         } else {
             steps = [{ step: 'analysis', content: 'Analyzing your request...' }];
         }
