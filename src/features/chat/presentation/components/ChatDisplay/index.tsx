@@ -12,7 +12,7 @@ const ChatDisplay: React.FC = () => {
     const { conversationId } = useParams<{ conversationId: string }>();
     const { askChatbot, loading, thoughtSteps, finalResponse } = useChatbotSSE();
     const { messages: backendMessages } = useConversationMessages(conversationId);
-    const { messages: localMessages, addUserMessage, addAssistantMessage } = useConversation();
+    const { messages: localMessages, addUserMessage, addAssistantMessage } = useConversation(conversationId);
     const savedResponse = useRef(false);
 
     useEffect(() => {
@@ -26,13 +26,23 @@ const ChatDisplay: React.FC = () => {
     }, [loading, finalResponse, thoughtSteps, addAssistantMessage]);
 
     const handleFormSubmit = (values: FormValues) => {
+        if (!conversationId) return;
         addUserMessage(values.userQuery);
-        askChatbot({
+        askChatbot(conversationId, {
             content: values.userQuery,
         });
     };
 
-    const allMessages = [...backendMessages, ...localMessages];
+    // Merge backend messages with local messages, prioritizing local thoughtSteps
+    const mergedMessages = backendMessages.map((backendMsg) => {
+        const localMsg = localMessages.find((local) => local.id === backendMsg.id);
+        return localMsg ? { ...backendMsg, thoughtSteps: localMsg.thoughtSteps } : backendMsg;
+    });
+
+    // Add any local-only messages
+    const localOnlyMessages = localMessages.filter((local) => !backendMessages.some((backend) => backend.id === local.id));
+
+    const allMessages = [...mergedMessages, ...localOnlyMessages];
 
     return (
         <Flex

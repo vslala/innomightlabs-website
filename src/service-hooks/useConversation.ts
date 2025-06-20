@@ -7,16 +7,19 @@ interface ThoughtStep {
     content: string;
 }
 
-export function useConversation() {
+export function useConversation(conversationId?: string) {
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const localStorageService = useMemo(() => getLocalStorageService(), []);
 
     useEffect(() => {
-        setMessages(localStorageService.getMessages());
-    }, [localStorageService]);
+        if (conversationId) {
+            setMessages(localStorageService.getMessages(conversationId));
+        }
+    }, [conversationId, localStorageService]);
 
     const addUserMessage = useCallback(
         (content: string) => {
+            if (!conversationId) return;
             const userMessage: ChatMessage = {
                 id: crypto.randomUUID(),
                 content,
@@ -24,15 +27,16 @@ export function useConversation() {
                 timestamp: new Date(),
             };
 
-            localStorageService.saveMessage(userMessage);
+            localStorageService.saveMessage(conversationId, userMessage);
             setMessages((prev) => [...prev, userMessage]);
             return userMessage.id;
         },
-        [localStorageService],
+        [conversationId, localStorageService],
     );
 
     const addAssistantMessage = useCallback(
         (content: string, thoughts?: string, thoughtSteps?: ThoughtStep[]) => {
+            if (!conversationId) return;
             const assistantMessage: ChatMessage = {
                 id: crypto.randomUUID(),
                 content,
@@ -42,17 +46,19 @@ export function useConversation() {
                 timestamp: new Date(),
             };
 
-            localStorageService.saveMessage(assistantMessage);
+            localStorageService.saveMessage(conversationId, assistantMessage);
             setMessages((prev) => [...prev, assistantMessage]);
             return assistantMessage.id;
         },
-        [localStorageService],
+        [conversationId, localStorageService],
     );
 
     const clearConversation = useCallback(() => {
-        localStorageService.clearMessages();
-        setMessages([]);
-    }, [localStorageService]);
+        if (conversationId) {
+            localStorageService.clearMessages(conversationId);
+            setMessages([]);
+        }
+    }, [conversationId, localStorageService]);
 
     return {
         messages,

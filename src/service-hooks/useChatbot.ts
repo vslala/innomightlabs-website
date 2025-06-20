@@ -17,14 +17,14 @@ export function useChatbotSSE() {
     const [finalResponse, setFinalResponse] = useState<string>('');
 
     const askChatbot = useCallback(
-        async (request: MessageRequest) => {
+        async (conversationId: string, request: MessageRequest) => {
             setLoading(true);
             setError(null);
             setThoughtSteps([]);
             setFinalResponse('');
 
             try {
-                const res = await chatbotService.sendMessage(request);
+                const res = await chatbotService.sendMessage(conversationId, request);
                 const reader = res.body!.getReader();
                 const decoder = new TextDecoder('utf-8');
 

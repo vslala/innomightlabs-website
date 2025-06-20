@@ -2,15 +2,14 @@ import { getConfig } from '../../../../config';
 import type { MessageRequest } from '../../application/dto/chatModels';
 
 interface ChatService {
-    sendMessage(message: MessageRequest): Promise<Response>;
+    sendMessage(conversationId: string, message: MessageRequest): Promise<Response>;
 }
 
 const appConfig = getConfig();
-const conversation_id = '58792226-20c5-4421-b6ec-52e64a2b33ae';
 
 export class ChatServiceRemote implements ChatService {
-    async sendMessage(request: MessageRequest): Promise<Response> {
-        const res = await fetch(`${appConfig.API_HOST}/api/v1/conversations/${conversation_id}/messages`, {
+    async sendMessage(conversationId: string, request: MessageRequest): Promise<Response> {
+        const res = await fetch(`${appConfig.API_HOST}/api/v1/conversations/${conversationId}/messages`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -26,7 +25,7 @@ export class ChatServiceRemote implements ChatService {
 }
 
 class ChatServiceLocal implements ChatService {
-    async sendMessage(message: MessageRequest): Promise<Response> {
+    async sendMessage(_conversationId: string, message: MessageRequest): Promise<Response> {
         const content = message.content.toLowerCase();
 
         let steps: Array<{ step: string; step_title?: string; content: string }> = [];
