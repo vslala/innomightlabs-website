@@ -30,6 +30,7 @@ const ChatDisplay: React.FC = () => {
         addUserMessage(values.userQuery);
         askChatbot(conversationId, {
             content: values.userQuery,
+            agent: values.selectedAgent,
         });
     };
 

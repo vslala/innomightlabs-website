@@ -1,0 +1,214 @@
+.inputContainer {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #e1e5e9;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
+}
+
+.inputContainer:focus-within {
+  border-color: #228be6;
+  box-shadow: 0 4px 12px rgba(34, 139, 230, 0.15);
+}
+
+.textareaWrapper {
+  position: relative;
+  padding: 16px;
+  padding-bottom: 8px;
+}
+
+.textarea {
+  width: 100%;
+  min-height: 24px;
+  max-height: 300px;
+  border: none;
+  outline: none;
+  resize: none;
+  font-size: 16px;
+  line-height: 1.5;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: transparent;
+  overflow-y: auto;
+}
+
+.textarea::placeholder {
+  color: #868e96;
+  font-size: 16px;
+}
+
+.bottomBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px 16px;
+  border-top: 1px solid #f1f3f4;
+  margin-top: 8px;
+}
+
+.agentSelector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.agentLabel {
+  font-size: 14px;
+  color: #495057;
+  font-weight: 500;
+}
+
+.agentSelect {
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 14px;
+  background: #ffffff;
+  color: #495057;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.agentSelect:hover {
+  border-color: #228be6;
+}
+
+.agentSelect:focus {
+  outline: none;
+  border-color: #228be6;
+  box-shadow: 0 0 0 2px rgba(34, 139, 230, 0.1);
+}
+
+.actionButtons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sendButton {
+  background: #228be6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sendButton:hover:not(:disabled) {
+  background: #1c7ed6;
+  transform: translateY(-1px);
+}
+
+.sendButton:disabled {
+  background: #adb5bd;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.sendButton:active {
+  transform: translateY(0);
+}
+
+.attachButton {
+  background: transparent;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #495057;
+}
+
+.attachButton:hover {
+  background: #f8f9fa;
+  border-color: #228be6;
+}
+
+.formatButtons {
+  display: flex;
+  gap: 4px;
+  margin-right: 8px;
+}
+
+.formatButton {
+  background: transparent;
+  border: none;
+  padding: 4px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  color: #868e96;
+  transition: all 0.2s ease;
+}
+
+.formatButton:hover {
+  background: #f8f9fa;
+  color: #495057;
+}
+
+.formatButton.active {
+  background: #e3f2fd;
+  color: #228be6;
+}
+
+.codeBlock {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  padding: 8px 12px;
+  margin: 4px 0;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 14px;
+  white-space: pre-wrap;
+}
+
+.characterCount {
+  font-size: 12px;
+  color: #868e96;
+  margin-left: auto;
+}
+
+.characterCount.warning {
+  color: #fd7e14;
+}
+
+.characterCount.error {
+  color: #fa5252;
+}
+
+/* Loading state */
+.loading .textarea {
+  opacity: 0.6;
+}
+
+.loading .sendButton {
+  background: #adb5bd;
+  cursor: not-allowed;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .bottomBar {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+  
+  .agentSelector {
+    justify-content: center;
+  }
+  
+  .actionButtons {
+    justify-content: center;
+  }
+}

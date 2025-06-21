@@ -7,6 +7,7 @@ export interface StreamChunk {
 export interface MessageRequest {
     content: string;
     parent_message_id?: string;
+    agent?: string;
 }
 
 export interface Conversation {
